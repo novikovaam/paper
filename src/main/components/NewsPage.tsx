@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {FC, useEffect, useState} from "react";
 import Service from "./service";
 
 
@@ -6,43 +6,27 @@ interface IProps {
     match: any
 }
 
-interface IState {
-    story?: IStory
-
-}
-
 interface IStory {
     title: string
 }
 
-class NewsPage extends Component<IProps, IState> {
+const NewsPage: FC<IProps> = (props: any) => {
 
+    const [story, setStory] = useState<IStory>();
 
-    constructor(props: Readonly<IProps> | IProps) {
-        super(props);
-
-        this.setState({
-                story: undefined
-            }
-        )
-
+    useEffect(() => {
         let id = props.match.params.id
 
         Service.getStoryById(id)
             .then(response => {
-                this.setState({
-                    story: response
-                })
+                setStory(response)
             })
-    }
+    });
 
-    render() {
-        if (this.state === null || this.state.story === undefined) {
-            return <div>LOADING...</div>
-        } else {
-            return <div>{this.state.story.title}</div>;
-        }
+    if (!story) {
+        return <div>LOADING...</div>
+    } else {
+        return <div>{story.title}</div>;
     }
 }
-
-export default NewsPage;
+export default NewsPage
