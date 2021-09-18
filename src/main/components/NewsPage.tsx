@@ -1,17 +1,48 @@
-import React from "react";
+import React, {Component} from "react";
+import Service from "./service";
 
-const NewsPage = (props: any) => {
 
-    return (
-        <div>
-            {props.match.params.id}
-            <div>author</div>
-            <div>title</div>
-            <div>description</div>
-            <div>comments</div>
-        </div>
-
-    )
+interface IProps {
+    match: any
 }
 
-export default NewsPage
+interface IState {
+    story?: IStory
+
+}
+
+interface IStory {
+    title: string
+}
+
+class NewsPage extends Component<IProps, IState> {
+
+
+    constructor(props: Readonly<IProps> | IProps) {
+        super(props);
+
+        this.setState({
+                story: undefined
+            }
+        )
+
+        let id = props.match.params.id
+
+        Service.getStoryById(id)
+            .then(response => {
+                this.setState({
+                    story: response
+                })
+            })
+    }
+
+    render() {
+        if (this.state === null || this.state.story === undefined) {
+            return <div>LOADING...</div>
+        } else {
+            return <div>{this.state.story.title}</div>;
+        }
+    }
+}
+
+export default NewsPage;

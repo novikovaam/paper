@@ -1,33 +1,54 @@
 import React, {Component} from "react";
 import {Link} from "react-router-dom";
-import Api from "./api";
+import Service from "./service";
 
 interface IProps {
 }
 
 interface IState {
-    loading: boolean,
-    stories: any,
+    stories?: any
 }
 
-class News extends Component <IProps, IState> {
+class NewsList extends Component <IProps, IState> {
 
     constructor(props: IProps) {
         super(props)
 
         this.setState({
-            loading: true,
-            stories: undefined,
+            stories: undefined
         })
 
-        Api.getTopStories()
+        Service.getTopStories()
             .then(response => {
                 this.setState({
-                    loading: false,
                     stories: response
                 })
             })
     }
+
+    render() {
+        if (this.state === null || this.state.stories === undefined) {
+            return (<div>loading</div>)
+        } else {
+            let content = this.state.stories.map((value: any) => {
+                return (
+                    <div key={`${value.id.toString()}`}>
+                        <Link to={`/news/${value.id}`}>{value.title}</Link>
+                    </div>
+                )
+            })
+            return (
+                <div>
+                    {content}
+                </div>
+            )
+        }
+
+    }
+}
+
+
+export default NewsList
 
 
 // enum sortType
@@ -49,28 +70,3 @@ class News extends Component <IProps, IState> {
 //         break;
 //
 // }
-
-    render() {
-        if (this.state === null || this.state.loading) {
-            return (<div>loading</div>)
-        } else {
-            let content = this.state.stories.map((value: any) => {
-                {console.log(value)}
-                return (
-                    <div key={`${value.id.toString()}`}>
-                        <Link to={`/news/${value.id}`}>{value.title}</Link>
-                    </div>
-                )
-            })
-            return (
-                <div>
-                    {content}
-                </div>
-            )
-        }
-
-    }
-}
-
-
-export default News
