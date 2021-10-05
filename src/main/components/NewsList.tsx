@@ -1,50 +1,39 @@
-import React, {Component} from "react";
+import React, {FC, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import Service from "./service";
+import type {IStory} from "./service";
 
 interface IProps {
 }
 
-interface IState {
-    stories?: any
-}
+const NewsList: FC<IProps> = (props: any) => {
 
-class NewsList extends Component <IProps, IState> {
+    const [stories, setStories] = useState<IStory[]>();
 
-    constructor(props: IProps) {
-        super(props)
-
-        this.setState({
-            stories: undefined
-        })
-
+    useEffect(() => {
         Service.getTopStories()
             .then(response => {
-                this.setState({
-                    stories: response
-                })
+                setStories(response)
             })
-    }
+    });
 
-    render() {
-        if (this.state === null || this.state.stories === undefined) {
-            return (<div>loading</div>)
-        } else {
-            let content = this.state.stories.map((value: any) => {
-                return (
-                    <div key={`${value.id.toString()}`}>
-                        <Link to={`/news/${value.id}`}>{value.title}</Link>
-                    </div>
-                )
-            })
+    if (stories === null || stories === undefined) {
+        return (<div>loading</div>)
+    } else {
+        let content = stories.map((value: any) => {
             return (
-                <div>
-                    {content}
+                <div key={`${value.id.toString()}`}>
+                    <Link to={`/news/${value.id}`}>{value.title}</Link>
                 </div>
             )
-        }
-
+        })
+        return (
+            <div>
+                {content}
+            </div>
+        )
     }
+
 }
 
 

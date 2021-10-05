@@ -1,13 +1,10 @@
 import React, {FC, useEffect, useState} from "react";
 import Service from "./service";
+import type {IStory} from "./service";
 
 
 interface IProps {
     match: any
-}
-
-interface IStory {
-    title: string
 }
 
 const NewsPage: FC<IProps> = (props: any) => {
