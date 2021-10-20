@@ -23,7 +23,11 @@ const NewsPage: FC<IProps> = (props: any) => {
     if (!story) {
         return <div>LOADING...</div>
     } else {
-        return <div>{story.title}</div>;
+
+        return <div>
+            <div>{story.title}</div>
+            <div>{story.time}</div>
+        </div>;
     }
 }
 export default NewsPage
